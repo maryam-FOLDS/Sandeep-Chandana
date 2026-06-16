@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sandeep & Chandana | Wedding Invitation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:wght@400;500;600;700&family=Great+Vibes&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --maroon:#6A3D3D;
+      --leaf:#2F4F3A;
+      --gold:#B99556;
+      --ivory:#f5efe4;
+      --stage-w:853;
+      --stage-h:1844;
+      --transition:1800ms;
+      --reveal:1000ms;
+      --ease:cubic-bezier(.22,1,.36,1);
+      --shadow:0 1px 0 rgba(255,255,255,.55), 0 2px 10px rgba(55,30,30,.08);
+    }
+
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;
+      width:100%;
+      height:100%;
+      overflow:hidden;
+      background:#efe7da;
+      font-synthesis-weight:none;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    body{
+      display:block;
+    }
+
+    .viewport-note{display:none}
+
+    .stage{
+      position:relative;
+      width:100vw;
+      height:100vh;
+      overflow:hidden;
+      background:#efe7da;
+      isolation:isolate;
+    }
+
+    .scene{
+      position:absolute;
+      inset:0;
+      opacity:0;
+      transition:opacity var(--transition) ease;
+      pointer-events:none;
+    }
+    .scene.active,
+    .scene.in{
+      opacity:1;
+      z-index:2;
+    }
+    .scene.out{
+      opacity:0;
+      z-index:1;
+    }
+
+    .bg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      object-position:center center;
+      user-select:none;
+      pointer-events:none;
+    }
+
+    .layer{
+      position:absolute;
+      inset:0;
+      z-index:3;
+    }
+
+    .txt, .ornament, .ganesh-wrap, .date-wrap, .section-group{
+      position:absolute;
+      left:50%;
+      transform:translateX(-50%) translateY(-14px);
+      opacity:0;
+      will-change:transform, opacity;
+      transition:
+        opacity var(--reveal) var(--ease),
+        transform var(--reveal) var(--ease);
+      text-align:center;
+      color:var(--maroon);
+      text-shadow:var(--shadow);
+    }
+
+    .show{
+      opacity:1 !important;
+      transform:translateX(-50%) translateY(0) !important;
+    }
+
+    .fade-only{
+      transform:translateX(-50%) !important;
+    }
+
+    .cinzel{font-family:'Cinzel', serif; letter-spacing:.12em; text-transform:uppercase;}
+    .cormorant{font-family:'Cormorant Garamond', serif;}
+    .greatvibes{font-family:'Great Vibes', cursive; letter-spacing:.02em;}
+    .playfair{font-family:'Playfair Display', serif;}
+
+    .smallcaps{letter-spacing:.18em; text-transform:uppercase;}
+
+    .ganesh-wrap{display:none;}
+    .ganesh-wrap svg{width:100%; height:auto; display:block; filter:drop-shadow(0 2px 4px rgba(70,40,40,.08));}
+
+    .scene1 .parents{
+      top:18.8%;
+      width:86%;
+      font-size:clamp(13px, 1.63vw, 24px);
+      font-weight:700;
+      line-height:1.32;
+      color:var(--maroon);
+    }
+    .scene1 .invite-msg{
+      top:26.2%;
+      width:74%;
+      font-size:clamp(16px, 2.05vw, 31px);
+      line-height:1.28;
+      font-weight:600;
+      color:var(--leaf);
+    }
+    .scene1 .groom{
+      top:39.4%;
+      width:78%;
+      font-size:clamp(30px, 5.1vw, 76px);
+      line-height:1.02;
+      color:var(--maroon);
+    }
+    .scene1 .with{
+      top:46.7%;
+      width:22%;
+      font-size:clamp(20px, 2.7vw, 40px);
+      font-style:italic;
+      color:var(--maroon);
+    }
+    .scene1 .bride{
+      top:51.4%;
+      width:78%;
+      font-size:clamp(30px, 5.15vw, 76px);
+      line-height:1.02;
+      color:var(--maroon);
+    }
+    .scene1 .bride-parents{
+      top:58.4%;
+      width:76%;
+      font-size:clamp(16px, 2.02vw, 30px);
+      line-height:1.22;
+      font-weight:600;
+      color:var(--maroon);
+    }
+
+    .heading{
+      width:66%;
+      font-size:clamp(18px, 2.3vw, 33px);
+      line-height:1.2;
+      font-weight:600;
+      color:var(--leaf);
+    }
+
+    .title-script{
+      width:60%;
+      font-size:clamp(34px, 6vw, 88px);
+      line-height:1;
+      color:var(--maroon);
+    }
+
+    .scene2 .heading{ top:23.6%; width:86%; }
+    .scene2 .title-script{ top:31.0%; }
+    .scene3 .heading{ top:22.2%; width:78%; }
+    .scene3 .title-script{ top:29.4%; }
+
+    .date-wrap{
+      top:42.2%;
+      width:58%;
+      display:flex;
+      align-items:flex-end;
+      justify-content:center;
+      gap:1.1%;
+      color:var(--maroon);
+    }
+    .scene3 .date-wrap{ top:39.7%; }
+
+    .date-part{
+      display:flex;
+      align-items:flex-end;
+      justify-content:center;
+    }
+
+    .date-txt{
+      font-size:clamp(22px, 3vw, 42px);
+      line-height:1;
+      font-weight:700;
+    }
+    .date-sep{
+      font-size:clamp(22px, 3vw, 42px);
+      line-height:1;
+      margin:0 .1em;
+      opacity:.65;
+    }
+
+    .day-roll{
+      position:relative;
+      height:1.08em;
+      overflow:hidden;
+      min-width:2.1em;
+      display:inline-block;
+      filter:blur(1.4px);
+      transition:filter 1200ms var(--ease);
+    }
+    .day-roll .strip{
+      display:flex;
+      flex-direction:column;
+      transform:translateY(0);
+      transition:transform 1200ms cubic-bezier(.19,1,.22,1), filter 1200ms var(--ease);
+      will-change:transform;
+    }
+    .day-roll .num{
+      display:block;
+      height:1.08em;
+      line-height:1.08em;
+    }
+    .day-roll.rolled{filter:blur(0)}
+    .day-roll.rolled .strip{transform:translateY(calc(-1.08em * 6));}
+
+    .day-big{
+      font-size:clamp(48px, 7vw, 102px);
+      line-height:1;
+      color:var(--maroon);
+    }
+
+    .ornament{
+      top:52.7%;
+      width:30%;
+      height:auto;
+    }
+    .scene3 .ornament{ top:50.8%; }
+    .ornament svg{ width:100%; height:auto; display:block; }
+    .ornament path{
+      fill:none;
+      stroke:rgba(106,61,61,.96);
+      stroke-width:2.3;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+      stroke-dasharray:260;
+      stroke-dashoffset:260;
+      transition:stroke-dashoffset 1000ms var(--ease), opacity 1000ms var(--ease);
+      opacity:0;
+    }
+    .ornament.show path{
+      stroke-dashoffset:0;
+      opacity:1;
+    }
+
+    .section-group{
+      width:66%;
+      color:var(--maroon);
+    }
+    .section-label{
+      font-size:clamp(16px, 2.15vw, 30px);
+      font-weight:700;
+      line-height:1.05;
+      margin-bottom:.15em;
+      color:var(--maroon);
+    }
+    .section-value{
+      font-size:clamp(18px, 2.4vw, 34px);
+      line-height:1.16;
+      font-weight:600;
+      color:var(--maroon);
+    }
+
+    .scene2 .time-group{ top:49.8%; }
+    .scene2 .venue-group{ top:56.6%; }
+
+    .scene3 .time-line{ top:47.8%; }
+    .scene3 .venue-line{ top:54.1%; }
+    .scene3 .lagnam-line{ top:60.4%; }
+
+    .inline-pair{
+      width:72%;
+      font-size:clamp(17px, 2.28vw, 32px);
+      line-height:1.15;
+      color:var(--maroon);
+    }
+    .inline-pair .label{font-weight:700; letter-spacing:.02em; text-transform:none; margin-right:.22em;}
+    .inline-pair .value{font-weight:600; font-family:'Cormorant Garamond', serif; letter-spacing:.02em; text-transform:none;}
+
+    .petal{
+      position:absolute;
+      width:1.2%;
+      aspect-ratio:1 / 1.45;
+      background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.8), rgba(214,110,124,.92) 58%, rgba(153,70,81,.9) 100%);
+      border-radius:55% 45% 60% 40% / 45% 60% 40% 55%;
+      opacity:.18;
+      filter:blur(.15px);
+      animation:petalFall linear infinite;
+      z-index:2;
+      pointer-events:none;
+    }
+    .petal::after{
+      content:'';
+      position:absolute;
+      inset:16% 30% 36% 44%;
+      border-radius:999px;
+      background:rgba(255,255,255,.35);
+      transform:rotate(-18deg);
+    }
+    .p1{left:18%; top:-6%; animation-duration:13s; animation-delay:.4s;}
+    .p2{left:72%; top:-8%; animation-duration:15s; animation-delay:2.1s;}
+    .p3{left:53%; top:-7%; animation-duration:14s; animation-delay:4s; width:1%; opacity:.13;}
+    @keyframes petalFall{
+      0%{transform:translate3d(0,0,0) rotate(0deg); opacity:0;}
+      10%{opacity:.18;}
+      100%{transform:translate3d(-26px,112vh,0) rotate(320deg); opacity:0;}
+    }
+
+    .footer-note{display:none;}
+
+    @media (max-width:720px){
+      .scene1 .parents{width:92%}
+      .scene1 .invite-msg{width:86%}
+      .scene1 .bride-parents{width:82%}
+      .scene2 .heading{width:94%}
+      .scene3 .heading{width:84%}
+      .scene2 .time-group,.scene2 .venue-group,.scene3 .inline-pair{width:80%}
+    }
+
+
+    .intro-overlay{
+      position:absolute;
+      inset:0;
+      z-index:20;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      cursor:pointer;
+      transition:opacity 900ms var(--ease), visibility 900ms var(--ease);
+    }
+    .intro-overlay.hidden{
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+    }
+    .intro-blur{
+      position:absolute;
+      inset:-3%;
+      width:106%;
+      height:106%;
+      object-fit:cover;
+      filter:blur(14px) brightness(.82);
+      transform:scale(1.04);
+    }
+    .intro-content{
+      position:relative;
+      z-index:2;
+      text-align:center;
+      padding:24px 20px;
+      border-radius:999px;
+      background:rgba(245,239,228,.18);
+      backdrop-filter:blur(8px);
+      -webkit-backdrop-filter:blur(8px);
+      box-shadow:0 12px 40px rgba(0,0,0,.12);
+    }
+    .intro-title{
+      color:#fff7ea;
+      font-size:clamp(24px, 4.2vw, 46px);
+      line-height:1.15;
+      text-shadow:0 4px 16px rgba(0,0,0,.25);
+    }
+  </style>
+</head>
+<body>
+  <div class="stage" id="stage" aria-label="South Indian wedding invitation animation">
+    <div class="intro-overlay" id="introOverlay" role="button" tabindex="0" aria-label="Tap to open invitation">
+      <img class="intro-blur" src="https://raw.githubusercontent.com/maryam-FOLDS/Sandeep-Chandana/refs/heads/main/imageoo.png" alt="Blurred invitation preview" />
+      <div class="intro-content">
+        <div class="intro-title cormorant">Tap to open invitation</div>
+      </div>
+    </div>
+    <section class="scene scene1 active" id="scene1">
+      <img class="bg" src="https://raw.githubusercontent.com/maryam-FOLDS/Sandeep-Chandana/refs/heads/main/imageoo.png" alt="Wedding invitation background 1" />
+      <div class="petal p1"></div><div class="petal p2"></div><div class="petal p3"></div>
+      <div class="layer">
+        <div class="txt parents cinzel" id="s1-parents">SMT.S.S MANJULA &amp; SRI. K.V SRINIVASA</div>
+        <div class="txt invite-msg cormorant" id="s1-msg">Solicit your gracious presence with your family and friends<br>on the occasion of the marriage of our elder son</div>
+        <div class="txt groom greatvibes" id="s1-groom">Chi.Ry.K.S.Sandeep</div>
+        <div class="txt with cormorant" id="s1-with"><em>With</em></div>
+        <div class="txt bride greatvibes" id="s1-bride">Chi.Sou.Chandana V</div>
+        <div class="txt bride-parents cormorant" id="s1-brideparents">Only Daughter of Smt. Nagarathnamma &amp; Sri Venkatarangappa</div>
+      </div>
+    </section>
+
+    <section class="scene scene2" id="scene2">
+      <img class="bg" src="https://github.com/maryam-FOLDS/Sandeep-Chandana/blob/main/imageo1.png?raw=true" alt="Wedding invitation background 2" />
+      <div class="petal p1"></div><div class="petal p2"></div><div class="petal p3"></div>
+      <div class="layer">
+        <div class="txt heading cormorant" id="s2-heading">An evening filled with joy, celebraton andtogetherness</div>
+        <div class="txt title-script greatvibes" id="s2-title">Reception</div>
+
+        <div class="date-wrap fade-only" id="s2-date">
+          <div class="date-part date-txt cinzel">JUN</div>
+          <div class="date-sep cormorant">|</div>
+          <div class="date-part day-big playfair">
+            <div class="day-roll" id="roll-24"><div class="strip">
+              <span class="num">18</span><span class="num">19</span><span class="num">20</span><span class="num">21</span><span class="num">22</span><span class="num">23</span><span class="num">24</span>
+            </div></div>
+          </div>
+          <div class="date-sep cormorant">|</div>
+          <div class="date-part date-txt cinzel">WED</div>
+        </div>
+
+        <div class="section-group fade-only time-group" id="s2-time">
+          <div class="section-label cinzel">TIME</div>
+          <div class="section-value cormorant">From 7:30 PM onwards</div>
+        </div>
+        <div class="section-group fade-only venue-group" id="s2-venue">
+          <div class="section-label cinzel">VENUE</div>
+          <div class="section-value cormorant">RS Kalyana Mantapa</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="scene scene3" id="scene3">
+      <img class="bg" src="https://raw.githubusercontent.com/maryam-FOLDS/Sandeep-Chandana/refs/heads/main/imageo2.png" alt="Wedding invitation background 3" />
+      <div class="petal p1"></div><div class="petal p2"></div><div class="petal p3"></div>
+      <div class="layer">
+        <div class="txt heading cormorant" id="s3-heading">With the blessings of our elders, we<br>begin our journey together in love and harmony</div>
+        <div class="txt title-script greatvibes" id="s3-title">Muhurtham</div>
+
+        <div class="date-wrap fade-only" id="s3-date">
+          <div class="date-part date-txt cinzel">JUN</div>
+          <div class="date-sep cormorant">|</div>
+          <div class="date-part day-big playfair">
+            <div class="day-roll" id="roll-25"><div class="strip">
+              <span class="num">19</span><span class="num">20</span><span class="num">21</span><span class="num">22</span><span class="num">23</span><span class="num">24</span><span class="num">25</span>
+            </div></div>
+          </div>
+          <div class="date-sep cormorant">|</div>
+          <div class="date-part date-txt cinzel">2026</div>
+        </div>
+
+        <div class="txt inline-pair cormorant time-line" id="s3-time"><span class="label cinzel">Time:</span><span class="value">Between 8:30 AM and 9:30 AM</span></div>
+        <div class="txt inline-pair cormorant venue-line" id="s3-venue"><span class="label cinzel">Venue:</span><span class="value">RS Kalyana Mantapa</span></div>
+        <div class="txt inline-pair cormorant lagnam-line" id="s3-lagnam"><span class="label cinzel">Lagnam:</span><span class="value">Kataka Lagnam</span></div>
+      </div>
+    </section>
+
+    <div class="footer-note">Exact-preservation mode: source images displayed without cropping or repainting.</div>
+  </div>
+
+  <script>
+    const $ = (sel) => document.querySelector(sel);
+    const addShow = (sel) => $(sel)?.classList.add('show');
+    const activateScene = (id) => {
+      document.querySelectorAll('.scene').forEach(s => s.classList.remove('active','in','out'));
+      $(id).classList.add('active');
+    };
+    const crossfade = (from, to) => {
+      const a = $(from), b = $(to);
+      a.classList.remove('active');
+      a.classList.add('out');
+      b.classList.add('in');
+      setTimeout(() => {
+        a.classList.remove('out');
+        b.classList.remove('in');
+        b.classList.add('active');
+      }, 1800);
+    };
+
+    const timeline = [
+      [0, () => activateScene('#scene1')],
+      [850, () => addShow('#s1-parents')],
+      [1850, () => addShow('#s1-msg')],
+      [3000, () => addShow('#s1-groom')],
+      [4000, () => addShow('#s1-with')],
+      [4850, () => addShow('#s1-bride')],
+      [5850, () => addShow('#s1-brideparents')],
+      [9300, () => crossfade('#scene1', '#scene2')],
+
+      [10200, () => addShow('#s2-heading')],
+      [11150, () => addShow('#s2-title')],
+      [12250, () => addShow('#s2-date')],
+      [12600, () => $('#roll-24')?.classList.add('rolled')],
+      [13950, () => addShow('#s2-time')],
+      [14950, () => addShow('#s2-venue')],
+      [18450, () => crossfade('#scene2', '#scene3')],
+
+      [19350, () => addShow('#s3-heading')],
+      [20300, () => addShow('#s3-title')],
+      [21450, () => addShow('#s3-date')],
+      [21800, () => $('#roll-25')?.classList.add('rolled')],
+      [23150, () => addShow('#s3-time')],
+      [24100, () => addShow('#s3-venue')],
+      [25050, () => addShow('#s3-lagnam')]
+    ];
+
+    let started = false;
+    const startInvitation = () => {
+      if(started) return;
+      started = true;
+      $('#introOverlay')?.classList.add('hidden');
+      timeline.forEach(([t, fn]) => setTimeout(fn, t));
+    };
+
+    $('#introOverlay')?.addEventListener('click', startInvitation);
+    $('#introOverlay')?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        startInvitation();
+      }
+    });
+  </script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>
